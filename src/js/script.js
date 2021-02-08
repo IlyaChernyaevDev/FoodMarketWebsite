@@ -37,29 +37,56 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    //Timer 
-    const daysBlock = document.querySelector('#days'),
-        hoursBlock = document.querySelector('#hours'),
-        minutesBlock = document.querySelector('#minutes'),
-        secondsBlock = document.querySelector('#seconds'),
-        endPromotion = new Date(2021, 4, 20, 0, 0, 0);
+    const deadline = '2021-05-20';
 
-    function calculateTime() {
-        const currentTime = new Date();
-        const timeLeft = endPromotion - currentTime;
-        let days = timeLeft/1000/60/60/24;
-        let hours = (days - Math.floor(days)) * 24;
-        let minuts = (hours - Math.floor(hours)) * 60;
-        let seconds = (minuts - Math.floor(minuts)) * 60;
-        showTime(days, hours, minuts, seconds);
-    }
-    function showTime(days, hours, minuts, seconds) {
-        daysBlock.innerHTML = Math.floor(days);
-        hoursBlock.innerHTML = Math.floor(hours);
-        minutesBlock.innerHTML = Math.floor(minuts);
-        secondsBlock.innerHTML = Math.floor(seconds);
+    function getTimeRemainig(endtime) {
+        const t = Date.parse(endtime) - Date.parse(new Date()),
+            days = Math.floor(t / (1000 * 60 * 60 * 24)),
+            hours = Math.floor(t / (1000 * 60 * 60) % 24),
+            minutes = Math.floor((t / 1000 / 60) % 60),
+            seconds = Math.floor((t / 1000) % 60);
+
+        return {
+            'total': t,
+            'days': days,
+            'hours': hours,
+            'minutes': minutes,
+            'seconds': seconds
+        };
     }
 
-    setInterval(calculateTime, 1000);
+    function getZero(num) {
+        if(num >= 0 && num < 10) {
+            return `0${num}`;
+        } else {
+            return num;
+        }
+    }
+
+    function setClock(selector, endtime) {
+        const timer = document.querySelector(selector),
+            days = timer.querySelector('#days'),
+            hours = timer.querySelector('#hours'),
+            minutes = timer.querySelector('#minutes'),
+            seconds = timer.querySelector('#seconds'),
+            timeInterval = setInterval(updateClock, 1000);
+
+        updateClock();
+
+        function updateClock() {
+            const t = getTimeRemainig(endtime);
+
+            days.innerHTML = getZero(t.days);
+            hours.innerHTML = getZero(t.hours);
+            minutes.innerHTML = getZero(t.minutes);
+            seconds.innerHTML = getZero(t.seconds);
+
+            if(t.total <= 0) {
+                clearInterval(timeInterval);
+            }
+        }
+    }
+
+    setClock('.timer' ,deadline);
 });
 
