@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    //Tabs
+    // Tabs
     const tabs = document.querySelectorAll('.tabheader__item'),
         tabsContent = document.querySelectorAll('.tabcontent'),
         tabsParent = document.querySelector('.tabheader__items');
@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Timer
     const deadline = '2021-05-20';
 
     function getTimeRemainig(endtime) {
@@ -88,5 +89,33 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     setClock('.timer' ,deadline);
+
+    // Modal
+
+    const whitePopupButton = document.querySelector('button.btn_white'),
+        blackPopupButton = document.querySelector('button.btn_dark'),
+        popup = document.querySelector('.modal'),
+        popupCloseButton = popup.querySelector('div.modal__close');
+
+
+    function showPopup() {
+        popup.style.display = 'block';
+    }
+
+    function closePopup(event) {
+        event.preventDefault();
+        const target = event.target;
+        if(target && (target.matches('.modal__close') || target.matches('form'))) {
+            popup.style.display = 'none';
+        } 
+        
+    }
+
+    whitePopupButton.addEventListener('click', showPopup);
+    blackPopupButton.addEventListener('click', showPopup);
+    popupCloseButton.addEventListener('click', closePopup);
+    popup.addEventListener('submit', closePopup);
+
+    
 });
 
