@@ -177,30 +177,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  setClock('.timer', deadline); // Modal
+  setClock('.timer', deadline); //Modal
 
-  const whitePopupButton = document.querySelector('button.btn_white'),
-        blackPopupButton = document.querySelector('button.btn_dark'),
-        popup = document.querySelector('.modal'),
-        popupCloseButton = popup.querySelector('div.modal__close');
+  const modalTrigger = document.querySelectorAll('[data-modal]'),
+        modal = document.querySelector('.modal'),
+        modalCloseBtn = document.querySelector('[data-close]');
+  modalTrigger.forEach(button => {
+    button.addEventListener('click', () => {
+      modal.classList.toggle('show');
+      document.body.style.overflow = 'hidden';
+    });
+  });
 
-  function showPopup() {
-    popup.style.display = 'block';
+  function closeModal() {
+    modal.classList.toggle('show');
+    document.body.style.overflow = '';
   }
 
-  function closePopup(event) {
-    event.preventDefault();
-    const target = event.target;
-
-    if (target && (target.matches('.modal__close') || target.matches('form'))) {
-      popup.style.display = 'none';
+  modalCloseBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', event => {
+    if (event.target === modal) {
+      closeModal();
     }
-  }
-
-  whitePopupButton.addEventListener('click', showPopup);
-  blackPopupButton.addEventListener('click', showPopup);
-  popupCloseButton.addEventListener('click', closePopup);
-  popup.addEventListener('submit', closePopup);
+  });
+  document.addEventListener('keydown', e => {
+    if (e.code === 'Escape' && modal.classList.contains('show')) {
+      closeModal();
+    }
+  });
 });
 
 /***/ })
