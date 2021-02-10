@@ -222,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const menuCardContainer = document.querySelector('div.menu__field div.container');
 
   class MenuCard {
-    constructor(src, alt, title, descr, price, cardContainer) {
+    constructor(src, alt, title, descr, price, cardContainer, ...classes) {
       this.src = src;
       this.alt = alt;
       this.title = title;
@@ -230,6 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
       this.price = price;
       this.cardContainer = cardContainer;
       this.transfer = 27;
+      this.classes = classes;
       this.changeToUAH();
     }
 
@@ -238,7 +239,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     createMenuCard() {
-      return `<div class="menu__item">
+      let cardClasses = '';
+
+      if (this.classes.length === 0) {
+        cardClasses = 'menu__item';
+      } else {
+        this.classes.forEach(item => cardClasses += ` ${item}`);
+      }
+
+      return `<div class="${cardClasses.trim()}">
                         <img src=${this.src} alt=${this.imgDescr}>
                         <h3 class="menu__item-subtitle">${this.title}</h3>
                         <div class="menu__item-descr">${this.descr}</div>
@@ -256,7 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   }
 
-  const menuCardArray = [new MenuCard("img/tabs/vegy.jpg", "vegy", 'Меню "Фитнес"', 'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!', 9, menuCardContainer), new MenuCard("img/tabs/post.jpg", "post", 'Меню "Постное"', 'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.', 16, menuCardContainer), new MenuCard("img/tabs/elite.jpg", "elite", 'Меню “Премиум”', 'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!', 20, menuCardContainer)];
+  const menuCardArray = [new MenuCard("img/tabs/vegy.jpg", "vegy", 'Меню "Фитнес"', 'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!', 9, menuCardContainer, 'menu__item'), new MenuCard("img/tabs/post.jpg", "post", 'Меню "Постное"', 'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.', 16, menuCardContainer, 'menu__item'), new MenuCard("img/tabs/elite.jpg", "elite", 'Меню “Премиум”', 'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!', 20, menuCardContainer, 'menu__item')];
   menuCardArray.forEach(card => {
     card.renderMenuCard(card.createMenuCard());
   });
