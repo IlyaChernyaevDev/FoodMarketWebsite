@@ -521,6 +521,9 @@ a {
     text-align: center;
     padding: 0 20px;
     outline: none; }
+  .modal__loading {
+    display: block;
+    margin: 15px auto 0 auto; }
   .modal .btn {
     display: block;
     width: 280px;
