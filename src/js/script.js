@@ -156,60 +156,41 @@ document.addEventListener('DOMContentLoaded', () => {
             this.price = this.price * this.transfer;
         }
 
-        createMenuCard() {
+        renderMenuCard() {
             let cardClasses = '';
             if(this.classes.length === 0) {
                 cardClasses = 'menu__item';
             } else {
                 this.classes.forEach(item => cardClasses += ` ${item}`);
             }
-            return `<div class="${cardClasses.trim()}">
-                        <img src=${this.src} alt=${this.imgDescr}>
-                        <h3 class="menu__item-subtitle">${this.title}</h3>
-                        <div class="menu__item-descr">${this.descr}</div>
-                        <div class="menu__item-divider"></div>
-                        <div class="menu__item-price">
-                            <div class="menu__item-cost">Цена:</div>
-                            <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
-                        </div>
-                    </div>`;
-
-        }
-
-        renderMenuCard(card) {
+            const card =  `<div class="${cardClasses.trim()}">
+                                    <img src=${this.src} alt=${this.imgDescr}>
+                                    <h3 class="menu__item-subtitle">${this.title}</h3>
+                                    <div class="menu__item-descr">${this.descr}</div>
+                                    <div class="menu__item-divider"></div>
+                                    <div class="menu__item-price">
+                                        <div class="menu__item-cost">Цена:</div>
+                                        <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
+                                    </div>
+                                </div>`;
             this.cardContainer.insertAdjacentHTML('beforeend', card);
         }
     }
 
-    const menuCardArray = [ new MenuCard(
-                                "img/tabs/vegy.jpg", 
-                                "vegy", 
-                                'Меню "Фитнес"', 
-                                'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!', 
-                                9, 
-                                menuCardContainer,
-                                'menu__item'), 
-                            new MenuCard(
-                                "img/tabs/post.jpg", 
-                                "post", 
-                                'Меню "Постное"', 
-                                'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.', 
-                                16, 
-                                menuCardContainer,
-                                'menu__item'), 
-                            new MenuCard(
-                                "img/tabs/elite.jpg", 
-                                "elite", 
-                                'Меню “Премиум”', 
-                                'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!', 
-                                20, 
-                                menuCardContainer,
-                                'menu__item')
-                        ];
+    const getResource = async (url) => {
+        const res = await fetch(url);
+        if(!res.ok) {
+            throw new Error(`Could not fetch ${url}, status: ${res.status}`);
+        }
+        return await res.json();
+    };
 
-    menuCardArray.forEach(card => {
-        card.renderMenuCard(card.createMenuCard());
-    });
+    getResource('http://localhost:3000/menu')
+        .then(data => {
+            data.forEach(({img, altimg, title, descr, price}) => {
+                new MenuCard(img, altimg, title, descr, price, menuCardContainer).renderMenuCard();
+            });
+        });
 
     const forms = document.querySelectorAll('form');
 
@@ -220,10 +201,22 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     forms.forEach(item => {
-        postData(item);
+        bindPostData(item);
     });
 
-    function postData(form) {
+    const postData = async (url, data) => {
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: data
+        });
+
+        return await res.json();
+    };
+
+    function bindPostData(form) {
         form.addEventListener('submit', (event) => {
             event.preventDefault();
 
@@ -235,19 +228,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const formData = new FormData(form);
 
-            const object = {};
-            formData.forEach(function(value, key) {
-                object[key] = value;
-            });
+            const json = JSON.stringify(Object.fromEntries((formData.entries())));
 
-            fetch('server1.php', {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(object)
-            })
-            .then(data => data.text())
+            postData('http://localhost:3000/requests', json)
             .then(data => {
                     console.log(data);
                     showThanksModal(message.succsess);

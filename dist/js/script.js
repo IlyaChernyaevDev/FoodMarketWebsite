@@ -278,38 +278,39 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   forms.forEach(item => {
     postData(item);
-  });
-
-  function postData(form) {
-    form.addEventListener('submit', event => {
-      event.preventDefault();
-      const statusMessage = document.createElement('img');
-      statusMessage.classList.add('modal__loading');
-      statusMessage.src = message.loading; // form.append(statusMessage);
-
-      form.insertAdjacentElement('afterend', statusMessage);
-      const request = new XMLHttpRequest();
-      request.open('POST', 'server.php');
-      request.setRequestHeader('Content-type', 'application/json');
-      const formData = new FormData(form);
-      const object = {};
-      formData.forEach(function (value, key) {
-        object[key] = value;
-      });
-      const json = JSON.stringify(object);
-      request.send(json);
-      request.addEventListener('load', () => {
-        if (request.status === 200) {
-          console.log(request.response);
-          showThanksModal(message.succsess);
-          form.reset();
-          statusMessage.remove();
-        } else {
-          showThanksModal(message.failure);
-        }
-      });
-    });
-  }
+  }); // function postData(form) {
+  //     form.addEventListener('submit', (event) => {
+  //         event.preventDefault();
+  //         const statusMessage = document.createElement('img');
+  //         statusMessage.classList.add('modal__loading');
+  //         statusMessage.src = message.loading;
+  //         form.insertAdjacentElement('afterend', statusMessage);
+  //         const formData = new FormData(form);
+  //         const object = {};
+  //         formData.forEach(function(value, key) {
+  //             object[key] = value;
+  //         });
+  //         fetch('server1.php', {
+  //             method: 'POST',
+  //             headers: {
+  //                 'Content-type': 'application/json'
+  //             },
+  //             body: JSON.stringify(object)
+  //         })
+  //         .then(data => data.text())
+  //         .then(data => {
+  //                 console.log(data);
+  //                 showThanksModal(message.succsess);
+  //                 form.reset();
+  //                 statusMessage.remove();
+  //         })
+  //         .catch(() => {
+  //             showThanksModal(message.failure);
+  //         })
+  //         .finally(() => {
+  //         });
+  //     });
+  // }
 
   function showThanksModal(message) {
     const prevModalDialog = document.querySelector('.modal__dialog');
