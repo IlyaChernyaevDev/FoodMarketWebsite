@@ -270,4 +270,56 @@ document.addEventListener('DOMContentLoaded', () => {
             closeModal();
         }, 4000);
     }
+
+    const countCurrent = document.querySelector('#current');
+    const slideArray = document.querySelectorAll('.offer__slide');
+    const prev = document.querySelector('.offer__slider-prev');
+    const next = document.querySelector('.offer__slider-next');
+    const imgArray = [...slideArray];
+
+
+    function hideSlide() {
+        imgArray.forEach(img =>  {
+            img.classList.add('hide');
+            img.classList.remove('show');
+        });
+    }
+
+    function showSlide(number, typeButton) {
+        
+        if(typeButton === 'prev') {
+            countCurrent.textContent = getZero(+countCurrent.textContent - 1);
+            number = countCurrent.textContent - 1;
+            if(number < 0) {
+                countCurrent.textContent = getZero(imgArray.length);
+                number = countCurrent.textContent - 1;
+            }
+        } else if(typeButton === 'next') {
+            countCurrent.textContent = getZero(+countCurrent.textContent + 1);
+            number = countCurrent.textContent - 1;
+            if(number >= imgArray.length) {
+                countCurrent.textContent = '01';
+                number = 0;
+            }
+        }
+        hideSlide();
+        imgArray.forEach((img, index) => {
+            if(index === number) {
+                img.classList.remove('hide');
+                img.classList.add('show');
+            }
+        });
+    }
+
+    prev.addEventListener('click', () => {
+        let slideNumber = countCurrent.textContent;
+        showSlide(slideNumber, 'prev');
+    });
+
+    next.addEventListener('click', () =>{
+        let slideNumber = countCurrent.textContent;
+        showSlide(slideNumber, 'next');
+    });
+
+    showSlide(2);
 });
