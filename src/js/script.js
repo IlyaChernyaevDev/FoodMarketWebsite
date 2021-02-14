@@ -330,4 +330,54 @@ document.addEventListener('DOMContentLoaded', () => {
 
         current.textContent = getZero(slideIndex);
     });
+
+    const dotsWrapper = document.querySelector('.carousel-indicators');
+
+    function makeDots(dotsCount) {
+        for(let i = 1; i <= dotsCount; i++) {
+            let dot = '';
+            if(i === 1) {
+                dot = `<div class="dot dot__active" id="${i}"></div>`;
+            } else {
+                dot = `<div class="dot" id="${i}"></div>`;
+            }
+            
+            dotsWrapper.insertAdjacentHTML('beforeend', dot);
+        }
+    }
+    makeDots(total.textContent);
+
+    function removeActive() {
+        const dots = document.querySelectorAll('.dot');
+        dots.forEach(item => item.classList.remove('dot__active'));
+    }
+
+    function showSlide(slideNumber) {
+        switch(+slideNumber) {
+            case 1:
+                offset = 0;
+                break;
+            case 2:
+                offset = 650;
+                break;
+            case 3:
+                offset = 1300;
+                break;
+            case 4:
+                offset = 1950;
+                break;
+        }
+        
+        slidesField.style.transform = `translate(-${offset}px)`;
+        current.textContent = getZero(slideNumber);
+    }
+    
+    dotsWrapper.addEventListener('click', (event) => {
+        const target = event.target;
+        if(target && target.classList.contains('dot')) {
+            removeActive();
+            target.classList.add('dot__active');
+            showSlide(target.id);
+        }
+    });
 });
