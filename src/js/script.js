@@ -378,56 +378,125 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    const gender = document.querySelector('#gender'),
-        physique = document.querySelectorAll('.calculating__choose_medium input'),
-        height = document.querySelector('#height'),
-        weight = document.querySelector('#weight'),
-        age = document.querySelector('#age'),
-        activity = document.querySelector('.calculating__choose_big'),
-        result = document.querySelector('.calculating__result span'),
-        activeButtons = document.querySelectorAll('.calculating__choose-item_active'),
-        activityСoefficients = {
-            low: 1.2,
-            small: 1.375,
-            medium: 1.55,
-            high: 1.725
-        };
+    // const gender = document.querySelector('#gender'),
+    //     physique = document.querySelectorAll('.calculating__choose_medium input'),
+    //     height = document.querySelector('#height'),
+    //     weight = document.querySelector('#weight'),
+    //     age = document.querySelector('#age'),
+    //     activity = document.querySelector('.calculating__choose_big'),
+    //     result = document.querySelector('.calculating__result span'),
+    //     activeButtons = document.querySelectorAll('.calculating__choose-item_active'),
+    //     activityСoefficients = {
+    //         low: 1.2,
+    //         small: 1.375,
+    //         medium: 1.55,
+    //         high: 1.725
+    //     };
 
-    function calculateCalories(gender, activityLevel) {
-        result.textContent = Math.round(BMR(gender, +weight.value, +height.value, +age.value) * activityСoefficients[activityLevel]);
-    }
+    // function calculateCalories(gender, activityLevel) {
+    //     result.textContent = Math.round(BMR(gender, +weight.value, +height.value, +age.value) * activityСoefficients[activityLevel]);
+    // }
 
-    function BMR(gender, weight, height, age) {
-        if (gender === 'Женщина') {
-            return 447.6 + (9.2 * weight) + (3.1 * height) - (4.3 * age);
+    // function BMR(gender, weight, height, age) {
+    //     if (gender === 'Женщина') {
+    //         return 447.6 + (9.2 * weight) + (3.1 * height) - (4.3 * age);
+    //     } else {
+    //         return 88.36 + (13.4 * weight) + (4.8 * height) - (5.7 * age);
+    //     }
+    // }
+
+    // gender.addEventListener('click', event => {
+    //     const target = event.target;
+    //     if (target && target.classList.contains('calculating__choose-item')) {
+    //         gender.querySelector('.calculating__choose-item_active').classList.remove('calculating__choose-item_active');
+    //         target.classList.add('calculating__choose-item_active');
+    //         calculateCalories(target.textContent, activeButtons[1].id);
+    //     }
+    // });
+
+    // activity.addEventListener('click', event => {
+    //     const target = event.target;
+    //     if (target && target.classList.contains('calculating__choose-item')) {
+    //         activity.querySelector('.calculating__choose-item_active').classList.remove('calculating__choose-item_active');
+    //         target.classList.add('calculating__choose-item_active');
+    //         calculateCalories(activeButtons[0].textContent, target.id);
+    //     }
+    // });
+
+    // physique.forEach(input => {
+    //     input.addEventListener('change', () => {
+    //         if (height.value && weight.value && age.value) {
+    //             calculateCalories(activeButtons[0].textContent, activeButtons[1].id);
+    //         }
+    //     });
+    // });
+
+    const result = document.querySelector('.calculating__result span');
+    let sex = 'female', 
+        height, weight, age,
+        ratio = 1.375;
+
+    function calcTotal() {
+        if(!sex || !height || !weight|| !age || !ratio) {
+            result.textContent = '____';
+            return;
+        }
+
+        if(sex === 'female') {
+            result.textContent = Math.round((447.6 + (9.2 * weight) + (3.1 * height) - (4.3 * age)) * ratio);
         } else {
-            return 88.36 + (13.4 * weight) + (4.8 * height) - (5.7 * age);
+            result.textContent = Math.round((88.36 + (13.4 * weight) + (4.8 * height) - (5.7 * age)) * ratio);
         }
     }
 
-    gender.addEventListener('click', event => {
-        const target = event.target;
-        if (target && target.classList.contains('calculating__choose-item')) {
-            gender.querySelector('.calculating__choose-item_active').classList.remove('calculating__choose-item_active');
-            target.classList.add('calculating__choose-item_active');
-            calculateCalories(target.textContent, activeButtons[1].id);
-        }
-    });
-
-    activity.addEventListener('click', event => {
-        const target = event.target;
-        if (target && target.classList.contains('calculating__choose-item')) {
-            activity.querySelector('.calculating__choose-item_active').classList.remove('calculating__choose-item_active');
-            target.classList.add('calculating__choose-item_active');
-            calculateCalories(activeButtons[0].textContent, target.id);
-        }
-    });
-
-    physique.forEach(input => {
-        input.addEventListener('change', () => {
-            if (height.value && weight.value && age.value) {
-                calculateCalories(activeButtons[0].textContent, activeButtons[1].id);
-            }
+    function getStaticInformation(parentSelector, activeClass) {
+        const elements = document.querySelectorAll(`${parentSelector} div`);
+        
+        elements.forEach(elem => {
+            elem.addEventListener('click', (e) => {
+                if(e.target.getAttribute('data-ratio')) {
+                    ratio = +e.target.getAttribute('data-ratio');
+                } else {
+                    sex = e.target.getAttribute('id');
+                }
+    
+                elements.forEach(elem => {
+                    elem.classList.remove(activeClass);
+                });
+    
+                e.target.classList.add(activeClass);
+    
+                calcTotal();
+            });
         });
-    });
+    }
+
+    getStaticInformation('#gender', 'calculating__choose-item_active');
+    getStaticInformation('.calculating__choose_big', 'calculating__choose-item_active');
+
+    function getDynamicInformation(selector) {
+        const input = document.querySelector(selector);
+
+        input.addEventListener('input', () => {
+            switch(input.getAttribute('id')) {
+                case 'height':
+                    height = +input.value;
+                    break;
+                case 'weight':
+                    weight = +input.value;
+                    break;
+                case 'age':
+                    age = +input.value;
+                    break;
+            }
+
+            calcTotal();
+        });
+
+        
+    }
+
+    getDynamicInformation('#height');
+    getDynamicInformation('#weight');
+    getDynamicInformation('#age');
 });
