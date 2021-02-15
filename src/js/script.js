@@ -27,9 +27,9 @@ document.addEventListener('DOMContentLoaded', () => {
     tabsParent.addEventListener('click', (event) => {
         const target = event.target;
 
-        if(target && target.matches('div.tabheader__item')) {
+        if (target && target.matches('div.tabheader__item')) {
             tabs.forEach((item, i) => {
-                if(target == item) {
+                if (target == item) {
                     hideTabContent();
                     showTabContent(i);
                 }
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function getZero(num) {
-        if(num >= 0 && num < 10) {
+        if (num >= 0 && num < 10) {
             return `0${num}`;
         } else {
             return num;
@@ -82,13 +82,13 @@ document.addEventListener('DOMContentLoaded', () => {
             minutes.innerHTML = getZero(t.minutes);
             seconds.innerHTML = getZero(t.seconds);
 
-            if(t.total <= 0) {
+            if (t.total <= 0) {
                 clearInterval(timeInterval);
             }
         }
     }
 
-    setClock('.timer' ,deadline);
+    setClock('.timer', deadline);
 
     //Modal
 
@@ -115,21 +115,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     modal.addEventListener('click', (event) => {
-        if(event.target === modal || event.target.getAttribute('data-close') == '') {
+        if (event.target === modal || event.target.getAttribute('data-close') == '') {
             closeModal();
         }
     });
 
     document.addEventListener('keydown', (e) => {
-        if(e.code === 'Escape' && modal.classList.contains('show')) {
+        if (e.code === 'Escape' && modal.classList.contains('show')) {
             closeModal();
         }
     });
-    
+
     const modalTimerId = setTimeout(openModal, 50000);
 
     function showModalByScroll() {
-        if(window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+        if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
             openModal();
             window.removeEventListener('scroll', showModalByScroll);
         }
@@ -158,12 +158,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         renderMenuCard() {
             let cardClasses = '';
-            if(this.classes.length === 0) {
+            if (this.classes.length === 0) {
                 cardClasses = 'menu__item';
             } else {
                 this.classes.forEach(item => cardClasses += ` ${item}`);
             }
-            const card =  `<div class="${cardClasses.trim()}">
+            const card = `<div class="${cardClasses.trim()}">
                                     <img src=${this.src} alt=${this.imgDescr}>
                                     <h3 class="menu__item-subtitle">${this.title}</h3>
                                     <div class="menu__item-descr">${this.descr}</div>
@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const getResource = async (url) => {
         const res = await fetch(url);
-        if(!res.ok) {
+        if (!res.ok) {
             throw new Error(`Could not fetch ${url}, status: ${res.status}`);
         }
         return await res.json();
@@ -187,7 +187,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     getResource('http://localhost:3000/menu')
         .then(data => {
-            data.forEach(({img, altimg, title, descr, price}) => {
+            data.forEach(({
+                img,
+                altimg,
+                title,
+                descr,
+                price
+            }) => {
                 new MenuCard(img, altimg, title, descr, price, menuCardContainer).renderMenuCard();
             });
         });
@@ -223,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const statusMessage = document.createElement('img');
             statusMessage.classList.add('modal__loading');
             statusMessage.src = message.loading;
-            
+
             form.insertAdjacentElement('afterend', statusMessage);
 
             const formData = new FormData(form);
@@ -231,18 +237,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const json = JSON.stringify(Object.fromEntries((formData.entries())));
 
             postData('http://localhost:3000/requests', json)
-            .then(data => {
+                .then(data => {
                     console.log(data);
                     showThanksModal(message.succsess);
                     form.reset();
                     statusMessage.remove();
-            })
-            .catch(() => {
-                showThanksModal(message.failure);
-            })
-            .finally(() => {
+                })
+                .catch(() => {
+                    showThanksModal(message.failure);
+                })
+                .finally(() => {
 
-            });
+                });
         });
     }
 
@@ -272,13 +278,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const slides = document.querySelectorAll('.offer__slide'),
-          slider = document.querySelector('.offer__slider'),
-          prev = document.querySelector('.offer__slider-prev'),
-          next = document.querySelector('.offer__slider-next'),
-          current = document.querySelector('#current'),
-          slidesWrapper = document.querySelector('.offer__slider-wrapper'),
-          slidesField = document.querySelector('.offer__slider-inner'),
-          width = window.getComputedStyle(slidesWrapper).width;
+        slider = document.querySelector('.offer__slider'),
+        prev = document.querySelector('.offer__slider-prev'),
+        next = document.querySelector('.offer__slider-next'),
+        current = document.querySelector('#current'),
+        slidesWrapper = document.querySelector('.offer__slider-wrapper'),
+        slidesField = document.querySelector('.offer__slider-inner'),
+        width = window.getComputedStyle(slidesWrapper).width;
 
     let slideIndex = 1,
         offset = 0;
@@ -301,11 +307,11 @@ document.addEventListener('DOMContentLoaded', () => {
     indicators.classList.add('carousel-indicators');
     slider.append(indicators);
 
-    for(let i = 0; i < slides.length; i++) {
+    for (let i = 0; i < slides.length; i++) {
         const dot = document.createElement('li');
         dot.setAttribute('data-slide-to', i + 1);
         dot.classList.add('dot');
-        if(i === 0) {
+        if (i === 0) {
             dot.classList.add('dot__active');
         }
         indicators.append(dot);
@@ -313,7 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     next.addEventListener('click', () => {
-        if(offset == parseFloat(width) * (slides.length - 1)) {
+        if (offset == parseFloat(width) * (slides.length - 1)) {
             offset = 0;
         } else {
             offset += parseFloat(width);
@@ -321,7 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         slidesField.style.transform = `translate(-${offset}px)`;
 
-        if(slideIndex == slides.length) {
+        if (slideIndex == slides.length) {
             slideIndex = 1;
         } else {
             slideIndex++;
@@ -334,16 +340,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     prev.addEventListener('click', () => {
-        if(offset == 0) {
+        if (offset == 0) {
             offset = parseFloat(width) * (slides.length - 1);
-            
+
         } else {
             offset -= parseFloat(width);
         }
 
         slidesField.style.transform = `translate(-${offset}px)`;
 
-        if(slideIndex == 1) {
+        if (slideIndex == 1) {
             slideIndex = slides.length;
         } else {
             slideIndex--;
@@ -369,6 +375,59 @@ document.addEventListener('DOMContentLoaded', () => {
 
             dots.forEach(dot => dot.classList.remove('dot__active'));
             dots[slideIndex - 1].classList.add('dot__active');
+        });
+    });
+
+    const gender = document.querySelector('#gender'),
+        physique = document.querySelectorAll('.calculating__choose_medium input'),
+        height = document.querySelector('#height'),
+        weight = document.querySelector('#weight'),
+        age = document.querySelector('#age'),
+        activity = document.querySelector('.calculating__choose_big'),
+        result = document.querySelector('.calculating__result span'),
+        activeButtons = document.querySelectorAll('.calculating__choose-item_active'),
+        activityСoefficients = {
+            low: 1.2,
+            small: 1.375,
+            medium: 1.55,
+            high: 1.725
+        };
+
+    function calculateCalories(gender, activityLevel) {
+        result.textContent = Math.round(BMR(gender, +weight.value, +height.value, +age.value) * activityСoefficients[activityLevel]);
+    }
+
+    function BMR(gender, weight, height, age) {
+        if (gender === 'Женщина') {
+            return 447.6 + (9.2 * weight) + (3.1 * height) - (4.3 * age);
+        } else {
+            return 88.36 + (13.4 * weight) + (4.8 * height) - (5.7 * age);
+        }
+    }
+
+    gender.addEventListener('click', event => {
+        const target = event.target;
+        if (target && target.classList.contains('calculating__choose-item')) {
+            gender.querySelector('.calculating__choose-item_active').classList.remove('calculating__choose-item_active');
+            target.classList.add('calculating__choose-item_active');
+            calculateCalories(target.textContent, activeButtons[1].id);
+        }
+    });
+
+    activity.addEventListener('click', event => {
+        const target = event.target;
+        if (target && target.classList.contains('calculating__choose-item')) {
+            activity.querySelector('.calculating__choose-item_active').classList.remove('calculating__choose-item_active');
+            target.classList.add('calculating__choose-item_active');
+            calculateCalories(activeButtons[0].textContent, target.id);
+        }
+    });
+
+    physique.forEach(input => {
+        input.addEventListener('change', () => {
+            if (height.value && weight.value && age.value) {
+                calculateCalories(activeButtons[0].textContent, activeButtons[1].id);
+            }
         });
     });
 });
