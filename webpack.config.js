@@ -29,13 +29,16 @@ const optimization = () => {
 
 const plugins = () => {
   const basePlugins = [
-    new HTMLWebpackPlugin({
+    new HTMLWebpackPlugin(
+      {
       template: path.resolve(__dirname, 'src/index.html'),
       filename: 'index.html',
+      inject: 'body',
       minify: {
         collapseWhitespace: isProd
       }
-    }),
+    }
+    ),
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
       filename: `./css/${filename('css')}`
@@ -77,7 +80,6 @@ module.exports = {
   output: {
     filename: `./js/${filename('js')}`,
     path: path.resolve(__dirname, 'dist'),
-    publicPath: ''
   },
   devServer: {
     historyApiFallback: true,
@@ -85,7 +87,7 @@ module.exports = {
     open: true,
     compress: true,
     hot: true,
-    port: 3000,
+    port: 8080,
   },
   optimization: optimization(),
   plugins: plugins(),

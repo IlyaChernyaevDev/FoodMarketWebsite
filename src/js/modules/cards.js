@@ -27,7 +27,7 @@ function cards() {
           } else {
               this.classes.forEach(item => cardClasses += ` ${item}`);
           }
-          const card = `<div class="${cardClasses.trim()}">
+          const card = `<div class="${cardClasses.trim()}"> 
                                   <img src=${this.src} alt=${this.imgDescr}>
                                   <h3 class="menu__item-subtitle">${this.title}</h3>
                                   <div class="menu__item-descr">${this.descr}</div>

@@ -90,9 +90,7 @@ function slider({container, slide, nextArrow, prevArrow, currentCounter, wrapper
       const slideTo = event.target.getAttribute('data-slide-to');
 
       slideIndex = slideTo;
-      console.log(parseFloat(width));
       offset = parseFloat(width) * (slideTo - 1);
-      console.log(offset);
       slidesField.style.transform = `translate(-${offset}px)`;
 
       current.textContent = getZero(slideIndex);
