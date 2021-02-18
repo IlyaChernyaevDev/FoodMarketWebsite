@@ -41,6 +41,7 @@ module.exports = {
       filename: `./css/${filename('css')}`
     })
   ],
+  devtool: isProd ? false : 'source-map',
   module: {
     rules: [{
         test: /\.css$/i,
