@@ -9,11 +9,13 @@ function calculator() {
       localStorage.setItem(key, value);
   }
 
+  console.log(localStorage.getItem('sex'));
   function initLocalSettings(selector, activeClass) {
       const elements = document.querySelectorAll(selector);
-      console.log(elements);
+    
       elements.forEach(elem => {
           elem.classList.remove(activeClass);
+
           if(elem.getAttribute('id') === localStorage.getItem('sex')) {
               elem.classList.add(activeClass);
           }
