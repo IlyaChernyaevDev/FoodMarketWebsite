@@ -1,6 +1,8 @@
 const path = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const {
+  CleanWebpackPlugin
+} = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -40,11 +42,9 @@ module.exports = {
     })
   ],
   module: {
-    rules: [
-      {
+    rules: [{
         test: /\.css$/i,
-        use: [
-          {
+        use: [{
             loader: MiniCssExtractPlugin.loader,
             options: {
               hmr: isDev
@@ -55,18 +55,22 @@ module.exports = {
       },
       {
         test: /\.s[ac]ss$/,
-        use: [
-          {
+        use: [{
             loader: MiniCssExtractPlugin.loader,
             options: {
               publicPath: (resourcePath, context) => {
                 return path.relative(path.dirname(resourcePath), context) + '/';
               },
             }
-          }, 
-          'css-loader', 
+          },
+          'css-loader',
           'sass-loader'
         ]
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: ['babel-loader']
       },
       {
         test: /\.(gif|png|jpg|jpeg|svg)$/,
@@ -77,6 +81,15 @@ module.exports = {
             options: {}
           },
         ]
+      },
+      {
+        test: /\.(woff2)$/,
+        use: [{
+          loader: 'file-loader',
+          options: {
+            name: `./fonts/${filename('[ext')}`
+          }
+        }]
       },
     ]
   }
